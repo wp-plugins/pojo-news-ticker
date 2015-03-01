@@ -5,7 +5,7 @@ Plugin URI: http://pojo.me/
 Description: Pojo news ticker plugin brings a easy to configure news ticker to on your WordPress site with Pojo Framework.
 Author: Pojo Team
 Author URI: http://pojo.me/
-Version: 1.0.0
+Version: 1.0.1
 Text Domain: pojo-news-ticker
 Domain Path: /languages/
 */
@@ -69,10 +69,19 @@ final class Pojo_News_Ticker {
 		echo '<div class="error"><p>' . sprintf( __( '<a href="%s" target="_blank">Pojo Framework</a> is not active. Please activate any theme by Pojo before you are using "Pojo News Ticker" plugin.', 'pojo-news-ticker' ), 'http://pojo.me/' ) . '</p></div>';
 	}
 
+	public function print_update_error() {
+		echo '<div class="error"><p>' . sprintf( __( 'Your <a href="%s" target="_blank">Pojo Framework</a> isn\'t updated, please upgrade.', 'pojo-news-ticker' ), 'http://pojo.me/' ) . '</p></div>';
+	}
+
 	public function bootstrap() {
 		// This plugin for Pojo Themes..
 		if ( ! class_exists( 'Pojo_Core' ) ) {
 			add_action( 'admin_notices', array( &$this, 'admin_notices' ) );
+			return;
+		}
+
+		if ( version_compare( '1.2.0', Pojo_Core::instance()->get_version(), '>' ) ) {
+			add_action( 'admin_notices', array( &$this, 'print_update_error' ) );
 			return;
 		}
 
